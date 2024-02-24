@@ -53,6 +53,11 @@ resource "azurerm_container_group" "main" {
     memory       = 2
     memory_limit = 2
 
+    ports {
+      port     = 443
+      protocol = "TCP"
+    }
+
     secure_environment_variables = {
       TFC_AGENT_TOKEN = tfe_agent_token.main[count.index].token
     }
