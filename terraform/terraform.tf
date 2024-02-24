@@ -13,6 +13,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~>3.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~>3.0"
+    }
   }
 }
 
@@ -22,4 +26,17 @@ provider "azurerm" {
   use_oidc             = true
   client_id_file_path  = var.tfc_azure_dynamic_credentials.default.client_id_file_path
   oidc_token_file_path = var.tfc_azure_dynamic_credentials.default.oidc_token_file_path
+}
+
+variable "tfc_azure_dynamic_credentials" {
+  type = object({
+    default = object({
+      client_id_file_path  = string
+      oidc_token_file_path = string
+    })
+    aliases = map(object({
+      client_id_file_path  = string
+      oidc_token_file_path = string
+    }))
+  })
 }
