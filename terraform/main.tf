@@ -5,7 +5,7 @@ module "naming" {
 }
 
 locals {
-  count = 3
+  count = 1
 }
 
 resource "random_pet" "main" {
