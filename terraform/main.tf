@@ -49,9 +49,9 @@ resource "azurerm_container_group" "main" {
     name         = "main"
     image        = "ghcr.io/mdmsua/tfc-agent:latest"
     cpu          = 2
-    cpu_limit    = 4
+    cpu_limit    = 2
     memory       = 2
-    memory_limit = 4
+    memory_limit = 2
 
     secure_environment_variables = {
       TFC_AGENT_TOKEN = tfe_agent_token.main[count.index].token
