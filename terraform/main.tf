@@ -1,7 +1,7 @@
 module "naming" {
   source  = "Azure/naming/azurerm"
   version = "0.4.0"
-  suffix  = "meta"
+  suffix  = ["meta"]
 }
 
 resource "tfe_agent_pool" "main" {
