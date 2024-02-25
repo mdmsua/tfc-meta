@@ -73,6 +73,14 @@ resource "azurerm_container_group" "main" {
   }
 }
 
-output "identity_id" {
-  value = azurerm_user_assigned_identity.main.id
+output "subscription_id" {
+  value = data.azurerm_client_config.main.subscription_id
+}
+
+output "resource_group_name" {
+  value = azurerm_resource_group.main.name
+}
+
+output "identity_name" {
+  value = azurerm_user_assigned_identity.main.name
 }

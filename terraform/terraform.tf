@@ -40,3 +40,5 @@ variable "tfc_azure_dynamic_credentials" {
     }))
   })
 }
+
+data "azurerm_client_config" "main" {}
