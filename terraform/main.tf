@@ -30,6 +30,12 @@ resource "azurerm_resource_group" "main" {
   location = "westeurope"
 }
 
+resource "azurerm_user_assigned_identity" "main" {
+  name                = module.naming.user_assigned_identity.name
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+}
+
 resource "azurerm_container_group" "main" {
   count               = local.count
   name                = "${module.naming.container_group.name}-${random_pet.main[count.index].id}"
@@ -42,16 +48,15 @@ resource "azurerm_container_group" "main" {
   zones               = [tostring(count.index + 1)]
 
   identity {
-    type = "SystemAssigned"
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.main.id]
   }
 
   container {
-    name         = "main"
-    image        = "ghcr.io/mdmsua/tfc-agent:latest"
-    cpu          = 2
-    cpu_limit    = 2
-    memory       = 2
-    memory_limit = 2
+    name   = "agent"
+    image  = "ghcr.io/mdmsua/tfc-agent:latest"
+    cpu    = 1
+    memory = 1
 
     ports {
       port     = 443
@@ -61,9 +66,13 @@ resource "azurerm_container_group" "main" {
     secure_environment_variables = {
       TFC_AGENT_TOKEN = tfe_agent_token.main[count.index].token
     }
+
+    environment_variables = {
+      TFC_AGENT_NAME = random_pet.main[count.index].id
+    }
   }
 }
 
-output "identity_principal_id" {
-  value = [azurerm_container_group.main[*].identity.0.principal_id]
+output "identity_id" {
+  value = azurerm_user_assigned_identity.main.id
 }
